@@ -85,8 +85,7 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div style="text-align: center; margin-top: 20px;">
+ <div style="text-align: center; margin-top: 20px;">
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_Soviet_Union.svg/320px-Flag_of_the_Soviet_Union.svg.png" 
        alt="Soviet Flag" 
        style="width: 120px; margin-right: 20px; border: 2px solid #ffcc00; box-shadow: 0 0 10px #ff0000; border-radius: 4px;" />
@@ -117,6 +116,59 @@
     </tbody>
   </table>
 </div>
+
+<script>
+  // Simple local leaderboard using browser storage
+  const leaderboardTable = document.getElementById('leaderboard').getElementsByTagName('tbody')[0];
+
+  function updateLeaderboard() {
+    leaderboardTable.innerHTML = '';
+    const scores = JSON.parse(localStorage.getItem('ossScores')) || [];
+    scores.sort((a, b) => b.score - a.score);
+    scores.forEach(entry => {
+      const row = leaderboardTable.insertRow();
+      const nameCell = row.insertCell(0);
+      const scoreCell = row.insertCell(1);
+      nameCell.textContent = entry.name;
+      scoreCell.textContent = entry.score;
+    });
+  }
+
+  function saveScore(name, score) {
+    const scores = JSON.parse(localStorage.getItem('ossScores')) || [];
+    scores.push({ name, score });
+    localStorage.setItem('ossScores', JSON.stringify(scores));
+    updateLeaderboard();
+  }
+
+  // Example usage: saveScore('Arjun', 85);
+  // Call updateLeaderboard() on page load
+  window.onload = updateLeaderboard;
+</script>
+
+🔧 Placement Tip
+
+Drop this block right before:
+
+<div class="container">
+
+So your <body> starts like:
+
+<body>
+  <div style="text-align: center; margin-top: 20px;">
+    <!-- Flags here -->
+  </div>
+
+  <div style="text-align: center; margin-top: 20px;">
+    <!-- Name input here -->
+  </div>
+
+  <div style="margin-top: 30px; text-align: center;">
+    <!-- Leaderboard here -->
+  </div>
+
+  <div class="container">
+    <!-- OSS form and logic -->
     <h1>📊 OSS Calculator</h1>
     <div class="divider"></div>
     <form id="ossForm">
@@ -197,4 +249,5 @@
   </script>
 </body>
 </html>
+
 
