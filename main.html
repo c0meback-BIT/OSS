@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OSS Calculator — Soviet Style</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Russo One', sans-serif;
+      background: linear-gradient(135deg, #8B0000, #000000);
+      color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.85);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+      max-width: 600px;
+      width: 90%;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      border: 2px solid #ff0000;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2em;
+      color: #ffcc00;
+      text-shadow: 2px 2px #800000;
+    }
+
+    label {
+      font-size: 1em;
+      color: #ffccaa;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background-color: #222;
+      color: #fff;
+      outline: none;
+      width: 100%;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 1.1em;
+      background-color: #ff0000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #cc0000;
+    }
+
+    #result {
+      text-align: center;
+      font-size: 1.2em;
+      margin-top: 10px;
+      color: #00ff99;
+    }
+
+    .divider {
+      height: 2px;
+      background: linear-gradient(to right, #ff0000, #ffcc00, #ff0000);
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="text-align: center; margin-top: 20px;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_Soviet_Union.svg/320px-Flag_of_the_Soviet_Union.svg.png" 
+       alt="Soviet Flag" 
+       style="width: 120px; margin-right: 20px; border: 2px solid #ffcc00; box-shadow: 0 0 10px #ff0000; border-radius: 4px;" />
+       
+  <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/320px-Flag_of_India.svg.png" 
+       alt="Indian Flag" 
+       style="width: 120px; border: 2px solid #00ffcc; box-shadow: 0 0 10px #00ffcc; border-radius: 4px;" />
+</div>
+    <h1>📊 OSS Calculator</h1>
+    <div class="divider"></div>
+    <form id="ossForm">
+      <label>Total Hours Studied:</label>
+      <input type="number" id="hours" step="0.1" required />
+
+      <label>Effectiveness (0 to 1):</label>
+      <input type="number" id="effectiveness" step="0.01" min="0" max="1" required />
+
+      <label>Average Difficulty (1 to 5):</label>
+      <input type="number" id="difficulty" step="0.1" min="1" max="5" required />
+
+      <label>MCQs Solved:</label>
+      <input type="number" id="mcq" min="0" value="0" />
+
+      <label>Theory Questions Solved:</label>
+      <input type="number" id="theory" min="0" value="0" />
+
+      <label>Numericals Solved:</label>
+      <input type="number" id="numerical" min="0" value="0" />
+
+      <label>Case-Based Questions Solved:</label>
+      <input type="number" id="case" min="0" value="0" />
+
+      <button type="submit">CALCULATE</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById("ossForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const hours = parseFloat(document.getElementById("hours").value);
+      const effectiveness = parseFloat(document.getElementById("effectiveness").value);
+      const difficulty = parseFloat(document.getElementById("difficulty").value);
+
+      const mcq = parseInt(document.getElementById("mcq").value) || 0;
+      const theory = parseInt(document.getElementById("theory").value) || 0;
+      const numerical = parseInt(document.getElementById("numerical").value) || 0;
+      const caseQ = parseInt(document.getElementById("case").value) || 0;
+
+      const typeWeights = {
+        mcq: 1.0,
+        theory: 1.2,
+        numerical: 1.5,
+        case: 1.8
+      };
+
+      const weightedQuestions =
+        (mcq * typeWeights.mcq) +
+        (theory * typeWeights.theory) +
+        (numerical * typeWeights.numerical) +
+        (caseQ * typeWeights.case);
+
+      const totalQuestions = mcq + theory + numerical + caseQ;
+
+      const OSS = (hours * 0.4) + (weightedQuestions * 0.3) + (effectiveness * 100 * 0.2) + (difficulty * 5 * 0.1);
+      const score = OSS.toFixed(2);
+
+      let rating = "";
+      if (OSS < 20) {
+        rating = "🐌 Bro just opened the book";
+      } else if (OSS < 35) {
+        rating = "🐢 Slow and steady";
+      } else if (OSS < 50) {
+        rating = "🦾 Grind mode activated";
+      } else {
+        rating = "🚀 Study god unlocked";
+      }
+
+      document.getElementById("result").innerHTML = `
+        <strong>OSS:</strong> ${score}<br/>
+        <strong>Total Questions:</strong> ${totalQuestions}<br/>
+        <strong>Rating:</strong> ${rating}
+      `;
+    });
+  </script>
+</body>
+</html>
